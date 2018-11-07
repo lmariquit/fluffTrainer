@@ -1,12 +1,14 @@
 // var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
 // var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
 // var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
-console.log('in index.js.... HHHAEOWFJAOWIEJF')
+
 window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
 const synth = window.speechSynthesis;
 const recognition = new SpeechRecognition();
+recognition.continuous = true
 
 const icon = document.querySelector('i.fa.fa-microphone')
+const diffIcon = document.querySelector('i.fa.fa-microphoneDiff')
 let paragraph = document.createElement('p');
 let container = document.querySelector('.text-box');
 container.appendChild(paragraph);
@@ -17,44 +19,63 @@ icon.addEventListener('click', () => {
   dictate();
 });
 
+diffIcon.addEventListener('click', () => {
+  sound.play();
+  stopListening();
+});
+
 const dictate = () => {
+  recognition.stop()
   recognition.start();
-  SpeechRecognition.continuous = true;
   recognition.onresult = (event) => {
-    const speechToText = event.results[0][0].transcript;
+    const speechToText = event.results[event.resultIndex][0].transcript;
     console.log(speechToText)
-    
+
     paragraph.textContent = speechToText;
 
-    if (event.results[0].isFinal) {
+    if (event.results[event.resultIndex]) {
 
-      if (speechToText.includes('what is the time')) {
-          speak(getTime);
+      if (speechToText.includes('like')) {
+        console.log('you said like...')
+          // speak(scoldForSayingLike);
       };
-      
-      if (speechToText.includes('what is today\'s date')) {
-          speak(getDate);
-      };
-      
-      if (speechToText.includes('what is the weather in')) {
-          getTheWeather(speechToText);
-      };
+
+      // if (speechToText.includes('what is today\'s date')) {
+      //     speak(getDate);
+      // };
+
+      // if (speechToText.includes('what is the weather in')) {
+      //     getTheWeather(speechToText);
+      // };
+
     }
     console.log(event)
   }
 }
 
-console.log('Not listening anymore')
+recognition.onspeechend = function () {
+  // recognition.stop();
+  console.log('Speech recognition has stopped.');
+  console.log('pls start again')
+  dictate()
+  // recognition.start();
+}
 
+const stopListening = () => {
+  recognition.stop()
+  console.log('we have stopped listening')
+}
 
+// SPEAK BACK functions
+const speak = (action) => {
+  utterThis = new SpeechSynthesisUtterance(action());
+  synth.speak(utterThis);
+};
 
-
-
-// // SPEAK BACK functions
-// const speak = (action) => {
-//   utterThis = new SpeechSynthesisUtterance(action());
-//   synth.speak(utterThis);
-// };
+// const scoldForSayingLike = () => {
+//   console.log('you said like...')
+//   return 'You said like. Why would you do that'
+// }
 
 // const getTime = () => {
 //   const time = new Date(Date.now());
