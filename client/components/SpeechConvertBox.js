@@ -54,6 +54,10 @@ export class SpeechConvertBox extends Component {
 
     render() {
         console.log('state.speech: ', this.state.speech)
+        if(this.props.timer) {
+            console.log('in here')
+            this.startConverting()
+        }
         return (
             <Fragment>
                 <div id="width" className="ui floating message">
@@ -67,8 +71,12 @@ export class SpeechConvertBox extends Component {
 
 }
 
+const mapStateToProps = state => ({
+    timer: state.timer
+})
+
 const mapDispatchToProps = dispatch => ({
     addLog: str => dispatch(addLog(str))
 })
 
-export default connect(null, mapDispatchToProps)(SpeechConvertBox)
+export default connect(mapStateToProps, mapDispatchToProps)(SpeechConvertBox)

@@ -1,29 +1,46 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import SpeechConvertBox from './SpeechConvertBox'
 import Timer from './Timer'
 import Logs from './Logs'
+import { toggleTimer } from '../store/timer'
 
 /**
  * COMPONENT
  */
-export const UserHome = props => {
-  const email = props.email || 'unknown user'
+export class UserHome extends Component {
+  constructor (props) {
+    super(props)
+    // this.state = ({
+    //   start: false
+    // })
+    // this.toggleStart = this.toggleStart.bind(this)
+  }
+  
+  // toggleStart() {
+  //   this.setState({
+  //     start: !this.start
+  //   })
+  // }
 
-  return (
-    <div>
-      <h3>Welcome, {email}</h3>
-      <div id="centeredContainer">
-        <div id="sideBySide">
-          <Timer /> 
-          {/* <button>BEGIN</button> */}
+  render() {
+    const email = this.props.email || 'unknown user'
+
+    return (
+      <div>
+        <h3>Welcome, {email}</h3>
+        <div id="centeredContainer">
+          <div id="sideBySide">
+            <Timer/> 
+            <button onClick={this.props.toggleTimer}>BEGIN</button>
+          </div>
+          <SpeechConvertBox/>
+          <Logs />
         </div>
-        <SpeechConvertBox />
-        <Logs />
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 /**
@@ -32,11 +49,16 @@ export const UserHome = props => {
 const mapState = state => {
   return {
     email: state.user.email,
-    logs: state.logs
+    logs: state.logs,
+    timer: state.timer
   }
 }
 
-export default connect(mapState)(UserHome)
+const mapDispatch = dispatch => ({
+  toggleTimer: () => dispatch(toggleTimer())
+})
+
+export default connect(mapState, mapDispatch)(UserHome)
 
 /**
  * PROP TYPES
