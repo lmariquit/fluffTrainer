@@ -1,16 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
+import SpeechConvertBox from './SpeechConvertBox'
 
 /**
  * COMPONENT
  */
 export const UserHome = props => {
-  const {email} = props
+  const email = props.email || 'unknown user'
 
   return (
     <div>
       <h3>Welcome, {email}</h3>
+      <SpeechConvertBox />
     </div>
   )
 }
