@@ -41,12 +41,13 @@ export default class SpeechConvertBox extends Component {
             console.log('resetting')
             finalTranscripts = ''
             speechRecognizer.stop()
+            //addLog here
             setTimeout(() => this.startConverting(), 700)
         }, 5000)
     }
 
     render() {
-        console.log('stizy', this.state.speech)
+        console.log('state.speech: ', this.state.speech)
         return (
             <Fragment>
                 <div className="container">
