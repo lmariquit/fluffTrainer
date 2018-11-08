@@ -12,17 +12,7 @@ import { toggleTimer } from '../store/timer'
 export class UserHome extends Component {
   constructor (props) {
     super(props)
-    // this.state = ({
-    //   start: false
-    // })
-    // this.toggleStart = this.toggleStart.bind(this)
   }
-  
-  // toggleStart() {
-  //   this.setState({
-  //     start: !this.start
-  //   })
-  // }
 
   render() {
     const email = this.props.email || 'unknown user'
@@ -31,10 +21,6 @@ export class UserHome extends Component {
       <div>
         <h3>Welcome, {email}</h3>
         <div id="centeredContainer">
-          <div id="sideBySide">
-            <Timer/> 
-            <button onClick={this.props.toggleTimer}>BEGIN</button>
-          </div>
           <SpeechConvertBox/>
           <Logs />
         </div>
