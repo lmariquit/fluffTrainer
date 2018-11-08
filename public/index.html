@@ -1,25 +1,85 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta name='viewport' content='width=device-width initial-scale=1.0'>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>LIKE Counter</title>
-    <link rel="stylesheet" href="/style.css" />
-    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
-    <script defer src="/bundle.js"></script>
-  </head>
-  <body>
-    <div id="app"></div>
 
-    <div class="container"> <!--page container -->
-      <div class="text-box" contenteditable="true"></div> <!--text box which will contain spoken text -->
-      <i class="fa fa-microphoneDiff">stop</i>
-      <i class="fa fa-microphone">listen</i> <!-- microphone icon to be clicked before speaking -->
-    </div>
-    <audio class="sound" src="beep.mp3"></audio> <!--sound to be played when we click icon => http://soundbible.com/1598-Electronic-Chime.html-->
-    
-    <script src="index.js"></script> <!-- link to index.js script -->
-    
-  </body>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width initial-scale=1.0'>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>LIKE Counter</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light" rel="stylesheet">
+  <script defer src="/bundle.js"></script>
+</head>
+
+<body>
+  <div id="app"></div>
+
+  <div class="container">
+    <!--page container -->
+    <div id="result" class="text-box" contenteditable="true"></div>
+    <!--text box which will contain spoken text -->
+    <!-- <i class="fa fa-microphoneDiff">stop</i> -->
+    <button onclick="startConverting()"><i class="fa fa-microphone">listen</i></button>
+    <!-- microphone icon to be clicked before speaking -->
+  </div>
+  <audio class="sound" src="beep.mp3"></audio>
+  <!--sound to be played when we click icon => http://soundbible.com/1598-Electronic-Chime.html-->
+
+  <script>
+    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+    var speechRecognizer = new SpeechRecognition()
+    var r = document.getElementById('result')
+
+    function startConverting() {
+      console.log('are you listening')
+      speechRecognizer.continuous = true
+      speechRecognizer.interimResults = true
+      speechRecognizer.lang = 'en-IN'
+      console.log('starting speech rec')
+      speechRecognizer.start()
+
+      var finalTranscripts = ''
+
+      speechRecognizer.onresult = function (event) {
+        var interimTranscripts = ''
+        for (var i = event.resultIndex; i < event.results.length; i++) {
+          var transcript = event.results[i][0].transcript
+          transcript.replace("\n", "<br>")
+          if (event.results[i].isFinal) {
+            finalTranscripts += transcript
+          } else {
+            interimTranscripts += transcript
+          }
+        }
+        r.innerHTML = finalTranscripts + '<span style="color:#999">' + interimTranscripts + '</span>'
+      }
+      console.log('looks good')
+
+      // speechRecognizer.onnomatch = function () {
+      //   // recognition.stop();
+      //   console.log('Speech recognition has stopped.');
+      //   console.log('pls start again')
+      //   // dictate()
+      //   // recognition.start();
+      // }
+
+  speechRecognizer.onerror = function (event) {
+
+      }
+
+      setTimeout(()=>{
+        console.log('testing interval')
+
+        speechRecognizer.stop()
+        setTimeout(()=>startConverting(),5000)
+
+      }, 3000)
+
+    }
+
+
+  </script> <!-- link to index.js script -->
+
+</body>
+
 </html>
