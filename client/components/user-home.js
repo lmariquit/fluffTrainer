@@ -10,13 +10,18 @@ import Logs from './Logs'
  */
 export const UserHome = props => {
   const email = props.email || 'unknown user'
-  console.log(props)
+
   return (
     <div>
       <h3>Welcome, {email}</h3>
-      <Timer />
-      <SpeechConvertBox />
-      <Logs logs={props.logs} />
+      <div id="centeredContainer">
+        <div id="sideBySide">
+          <Timer /> 
+          {/* <button>BEGIN</button> */}
+        </div>
+        <SpeechConvertBox />
+        <Logs />
+      </div>
     </div>
   )
 }

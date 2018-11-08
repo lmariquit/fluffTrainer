@@ -9,7 +9,7 @@ export class Logs extends Component {
 
     render() {
         return (
-            <div>
+            <div id="logBox" className="ui floating message">
                 {this.props.logs.map(str => {
                     return <div><span onClick={() => this.props.removeLog(str)}>x   </span>{str}</div>
                 })}
@@ -18,8 +18,12 @@ export class Logs extends Component {
     }
 }
 
+const mapStateToProps = state => ({
+    logs: state.logs
+})
+
 const mapDispatchToProps = dispatch => ({
     removeLog: str => dispatch(removeLog(str))
 })
 
-export default connect (null, mapDispatchToProps)(Logs)
+export default connect (mapStateToProps, mapDispatchToProps)(Logs)

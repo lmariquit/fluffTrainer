@@ -16,7 +16,7 @@ export const removeLog = log => ({
 //thunk action creators
 
 //reducer
-export default function (prevState = ['this is a test', 'i said like like once', 'aw I did it like again'], action) {
+export default function (prevState = [], action) {
     switch (action.type) {
         case ADD_LOG:
             return [...prevState, action.payload]

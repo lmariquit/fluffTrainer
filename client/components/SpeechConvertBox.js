@@ -1,19 +1,22 @@
 import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux';
+import { addLog } from '../store/logs'
+
 window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
 const speechRecognizer = new SpeechRecognition()
 let finalTranscripts = ''
 
-export default class SpeechConvertBox extends Component {
+export class SpeechConvertBox extends Component {
     constructor() {
         super()
         this.state = ({
             speech: ''
         })
         this.startConverting = this.startConverting.bind(this)
-        this.test = this.test.bind(this)
+        this.transcribe = this.transcribe.bind(this)
     }
 
-    test(event) {
+    transcribe(event) {
         let interimTranscripts = '\n'
         for (let i = event.resultIndex; i < event.results.length; i++) {
             let transcript = event.results[i][0].transcript
@@ -35,13 +38,16 @@ export default class SpeechConvertBox extends Component {
         speechRecognizer.lang = 'en-IN'
         speechRecognizer.start()
 
-        speechRecognizer.onresult = this.test
+        speechRecognizer.onresult = this.transcribe
 
         setTimeout(() => {
             console.log('resetting')
             finalTranscripts = ''
             speechRecognizer.stop()
-            //addLog here
+            this.state.speech.includes('like') && this.props.addLog(this.state.speech)
+            this.setState({
+                speech: ''
+            })
             setTimeout(() => this.startConverting(), 700)
         }, 5000)
     }
@@ -50,13 +56,19 @@ export default class SpeechConvertBox extends Component {
         console.log('state.speech: ', this.state.speech)
         return (
             <Fragment>
-                <div className="container">
-                    <div id="speech" name='speech' className="text-box" contentEditable="true" suppressContentEditableWarning={true}>{this.state.speech}</div>
-                    <button onClick={this.startConverting}><i className="fa fa-microphone"></i></button>
+                <div id="width" className="ui floating message">
+                    <div className="text-box" contentEditable="true" suppressContentEditableWarning={true}>{this.state.speech}</div>
+                    <button onClick={this.startConverting} className="ui button"><i className="fa fa-microphone"></i></button>
                 </div>
-                <audio className="sound" src="beep.mp3"></audio>
+                {/* <audio className="sound" src="beep.mp3"></audio> */}                
             </Fragment>
         )
     }
 
 }
+
+const mapDispatchToProps = dispatch => ({
+    addLog: str => dispatch(addLog(str))
+})
+
+export default connect(null, mapDispatchToProps)(SpeechConvertBox)

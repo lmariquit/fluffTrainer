@@ -8,7 +8,6 @@ export default class Timer extends Component {
             hours: '00',
             minutes: '00',
             seconds: '00',
-            // milliSeconds: '00'
         })
         this.startTimer = this.startTimer.bind(this)
         this.timeCount = this.timeCount.bind(this)
@@ -27,14 +26,10 @@ export default class Timer extends Component {
         let s = Math.floor((distance % (1000 * 60)) / 1000);
         let seconds = s < 10 ? `0${s}` : s
 
-        // let ms = Math.floor((distance % (1000)) / (1000 / 100));
-        // let milliSeconds = ms < 10 ? `0${ms}` : ms
-
         this.setState({
             hours,
             minutes,
             seconds
-            // milliSeconds
         })
     }
 
@@ -46,7 +41,9 @@ export default class Timer extends Component {
     render() {
         const { hours, minutes, seconds } = this.state
         return (
-            <div>{hours}:{minutes}:{seconds}<button onClick={this.startTimer}>START</button></div>
+            <div>{hours}:{minutes}:{seconds}
+                <button onClick={this.startTimer}>START</button>
+            </div>
         )
     }
 }
