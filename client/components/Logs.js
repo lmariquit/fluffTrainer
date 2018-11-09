@@ -11,7 +11,7 @@ export class Logs extends Component {
         return (
             <div id="logBox" className="ui floating message">
                 {this.props.logs.map(str => {
-                    return <div><i class="window close outline icon" onClick={() => this.props.removeLog(str)}></i>{str}</div>
+                    return <div><i className="window close outline icon" onClick={() => this.props.removeLog(str)}></i>{str.phrase}</div>
                 })}
             </div>
         )

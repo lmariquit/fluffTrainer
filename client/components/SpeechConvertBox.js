@@ -25,7 +25,6 @@ export class SpeechConvertBox extends Component {
         })
         this.startConverting = this.startConverting.bind(this)
         this.transcribe = this.transcribe.bind(this)
-        // this.startTimer = this.startTimer.bind(this)
         this.timeCount = this.timeCount.bind(this)
         this.toggle = this.toggle.bind(this)
     }
@@ -56,16 +55,21 @@ export class SpeechConvertBox extends Component {
 
         convertInterval = setTimeout(() => {
             console.log('resetting')
-            finalTranscripts = ''
             speechRecognizer.stop()
+            finalTranscripts = ''
 
             if (this.state.speech.includes('like')) {
-                this.props.addLog(this.state.speech)
                 let toAdd = this.state.speech.split(' ').filter(word => word === 'like').length
+                console.log('adding: ', toAdd)
                 likes = likes + toAdd
+                this.props.addLog({
+                    phrase: this.state.speech,
+                    likeCount: toAdd
+                })
                 toAdd = 0
+                console.log(likes)
             }
-
+            
             this.setState({
                 speech: '',
             })
@@ -95,11 +99,6 @@ export class SpeechConvertBox extends Component {
             seconds
         })
     }
-
-    // startTimer() {
-    //     countDownDate = new Date()
-    //     setInterval(()=>this.timeCount(countDownDate), 100);
-    // }
 
     toggle() {
         console.log(convertInterval)
@@ -133,7 +132,7 @@ export class SpeechConvertBox extends Component {
                     <button id="timeButton" className="ui green button" onClick={this.toggle}>START<i id="micIcon" className="microphone icon"></i></button>
                 </div>
                 <div id="sideBySide">
-                    <div id="likeLabel">"LIKES"</div>
+                    <div id="likeLabel">"LIKE"</div>
                     <div id="likesCount" className="ui red circular label">{likes}</div>
                 </div>
                 <div id="width" className="ui floating message">
