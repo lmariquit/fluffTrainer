@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
+import { toggleTimer } from '../store/timer'
+
 let countDownDate
 
-export default class Timer extends Component {
-    constructor() {
-        super()
+export class Timer extends Component {
+    constructor(props) {
+        super(props)
         this.state = ({
             hours: '00',
             minutes: '00',
@@ -40,10 +43,22 @@ export default class Timer extends Component {
 
     render() {
         const { hours, minutes, seconds } = this.state
+        if (this.props.timer) {
+            this.props.toggleTimer()
+            this.startTimer()
+        }
         return (
-            <div>{hours}:{minutes}:{seconds}
-                <button onClick={this.startTimer}>START</button>
-            </div>
+            <div>{hours}:{minutes}:{seconds}</div>
         )
     }
 }
+
+const mapStateToProps = state => ({
+    timer: state.timer
+})
+
+const mapDispatchToProps = dispatch => ({
+    toggleTimer: () => dispatch(toggleTimer())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Timer)
