@@ -30,6 +30,14 @@ form div {
   align-items: center;
 }
 
+#background {
+  background-color: rgb(217, 227, 255);
+}
+
+#line {
+  margin: 0px;
+}
+
 #logBox {
   width: 800px;
   height: 400px;
@@ -69,4 +77,17 @@ form div {
 
 #micIcon {
   padding-left: 10px;
+}
+
+#likesCount {
+  font-size: 40px;
+  width: 80px;
+  height: 80px;
+  margin-left: 10px;
+}
+
+#likeLabel {
+  font-size: 40px;
+  padding-top: 30px;
+  margin-right: 10px;
 }
