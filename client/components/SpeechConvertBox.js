@@ -25,7 +25,6 @@ export class SpeechConvertBox extends Component {
         })
         this.startConverting = this.startConverting.bind(this)
         this.transcribe = this.transcribe.bind(this)
-        // this.startTimer = this.startTimer.bind(this)
         this.timeCount = this.timeCount.bind(this)
         this.toggle = this.toggle.bind(this)
     }
