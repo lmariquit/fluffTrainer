@@ -8,7 +8,6 @@ let pause
 let convertInterval = 0
 let timerInterval = 0
 let resetTimeout = 0
-let likes = 0
 
 window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
 const speechRecognizer = new SpeechRecognition()
@@ -21,7 +20,7 @@ export class SpeechConvertBox extends Component {
             speech: '',
             hours: '00',
             minutes: '00',
-            seconds: '00',
+            seconds: '00'
         })
         this.startConverting = this.startConverting.bind(this)
         this.transcribe = this.transcribe.bind(this)
@@ -58,18 +57,10 @@ export class SpeechConvertBox extends Component {
             console.log('resetting')
             finalTranscripts = ''
             speechRecognizer.stop()
-
-            if (this.state.speech.includes('like')) {
-                this.props.addLog(this.state.speech)
-                let toAdd = this.state.speech.split(' ').filter(word => word === 'like').length
-                likes = likes + toAdd
-                toAdd = 0
-            }
-
+            this.state.speech.includes('like') && this.props.addLog(this.state.speech)
             this.setState({
                 speech: '',
             })
-
             resetTimeout = setTimeout(() => this.startConverting(), 700)
         }, 5000)
         timerInterval = setInterval(()=>this.timeCount(countDownDate), 100);
@@ -125,16 +116,11 @@ export class SpeechConvertBox extends Component {
             this.props.toggleTimer()
             this.startConverting()
         }
-
         return (
             <Fragment>
                 <div id="sideBySide">
                     <div id="time">{hours}:{minutes}:{seconds}</div>
                     <button id="timeButton" className="ui green button" onClick={this.toggle}>START<i id="micIcon" className="microphone icon"></i></button>
-                </div>
-                <div id="sideBySide">
-                    <div id="likeLabel">"LIKES"</div>
-                    <div id="likesCount" className="ui red circular label">{likes}</div>
                 </div>
                 <div id="width" className="ui floating message">
                     <div className="text-box" contentEditable="true" suppressContentEditableWarning={true}>{this.state.speech}</div>

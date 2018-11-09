@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import SpeechConvertBox from './SpeechConvertBox'
+import Timer from './Timer'
 import Logs from './Logs'
 import { toggleTimer } from '../store/timer'
 
@@ -17,7 +18,7 @@ export class UserHome extends Component {
     const email = this.props.email || 'unknown user'
 
     return (
-      <div id="background">
+      <div>
         <h3>Welcome, {email}</h3>
         <div id="centeredContainer">
           <SpeechConvertBox/>
