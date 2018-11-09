@@ -39,3 +39,34 @@ form div {
   display: flex;
   flex-direction: row;
 }
+
+#time {
+  font-family:'digital-clock-font';
+  /* src: url('put_the_location_to_your_font.ttf or .otf'); */
+  font-size: 30px;
+  color: red;
+  margin: 20px;
+  padding-top: 10px;
+  width: 120px;
+  height: 40px;
+  background: rgb(211, 209, 207);
+  text-align: center;
+  margin-right: 5px;
+  border-style: solid;
+  border-width: thin;
+  border-color: rgb(146, 146, 146);
+}
+
+#timeButton {
+  margin: 20px;
+  width: 120px;
+  height: 40px;
+  margin-left: 5px;
+  border-style: solid;
+  border-width: thin;
+  border-color: rgb(146, 146, 146);
+}
+
+#micIcon {
+  padding-left: 10px;
+}

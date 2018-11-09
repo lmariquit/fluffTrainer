@@ -4,6 +4,10 @@ import { addLog } from '../store/logs'
 import { toggleTimer } from '../store/timer'
 
 let countDownDate
+let pause
+let convertInterval = 0
+let timerInterval = 0
+let resetTimeout = 0
 
 window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
 const speechRecognizer = new SpeechRecognition()
@@ -22,6 +26,7 @@ export class SpeechConvertBox extends Component {
         this.transcribe = this.transcribe.bind(this)
         // this.startTimer = this.startTimer.bind(this)
         this.timeCount = this.timeCount.bind(this)
+        this.toggle = this.toggle.bind(this)
     }
 
     transcribe(event) {
@@ -48,7 +53,7 @@ export class SpeechConvertBox extends Component {
 
         speechRecognizer.onresult = this.transcribe
 
-        setTimeout(() => {
+        convertInterval = setTimeout(() => {
             console.log('resetting')
             finalTranscripts = ''
             speechRecognizer.stop()
@@ -56,9 +61,9 @@ export class SpeechConvertBox extends Component {
             this.setState({
                 speech: '',
             })
-            setTimeout(() => this.startConverting(), 700)
+            resetTimeout = setTimeout(() => this.startConverting(), 700)
         }, 5000)
-        setInterval(()=>this.timeCount(countDownDate), 100);
+        timerInterval = setInterval(()=>this.timeCount(countDownDate), 100);
     }
 
 
@@ -87,22 +92,38 @@ export class SpeechConvertBox extends Component {
     //     setInterval(()=>this.timeCount(countDownDate), 100);
     // }
 
+    toggle() {
+        console.log(convertInterval)
+        if (!convertInterval) {
+            this.props.toggleTimer()
+        } else {
+            speechRecognizer.stop()
+            clearTimeout(convertInterval)
+            clearTimeout(timerInterval)
+            convertInterval = 0
+            timerInterval = 0
+            resetTimeout = 0
+            pause = new Date()
+        }
+    }
+
     render() {
         const { hours, minutes, seconds } = this.state
         if(this.props.timer) {
+            // if (!countDownDate) {
             countDownDate = new Date()
+            // }
             this.props.toggleTimer()
             this.startConverting()
         }
         return (
             <Fragment>
                 <div id="sideBySide">
-                    <div>{hours}:{minutes}:{seconds}</div>
-                    <button onClick={this.props.toggleTimer}>BEGIN</button>
+                    <div id="time">{hours}:{minutes}:{seconds}</div>
+                    <button id="timeButton" className="ui green button" onClick={this.toggle}>START<i id="micIcon" className="microphone icon"></i></button>
                 </div>
                 <div id="width" className="ui floating message">
                     <div className="text-box" contentEditable="true" suppressContentEditableWarning={true}>{this.state.speech}</div>
-                    <button onClick={this.startConverting} className="ui button"><i className="fa fa-microphone"></i></button>
                 </div>
                 {/* <audio className="sound" src="beep.mp3"></audio> */}                
             </Fragment>
