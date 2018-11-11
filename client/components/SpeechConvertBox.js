@@ -29,6 +29,14 @@ export class SpeechConvertBox extends Component {
         this.toggle = this.toggle.bind(this)
     }
 
+    // componentDidMount () {
+    //     console.log('ooga chacka', this.props.logs)
+    //     this.props.logs.length && (likes = this.props.logs.reduce((acc, elem)=> {
+    //         return acc + elem.likeCount
+    //     }))
+    //     console.log(likes)
+    // }
+
     transcribe(event) {
         let interimTranscripts = '\n'
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -131,6 +139,14 @@ export class SpeechConvertBox extends Component {
             this.props.toggleTimer()
             this.startConverting()
         }
+
+        console.log('ooga chacka', this.props.logs)
+        this.props.logs.length && (
+            likes = this.props.logs.reduce((acc, elem) => {
+                return acc + elem.likeCount
+            }, 0)
+        )
+        console.log(likes)
 
         return (
             <Fragment>

@@ -7,6 +7,9 @@ const Log = db.define('logs', {
     },
     likeCount: {
         type: Sequelize.INTEGER
+    },
+    speechTime: {
+        type: Sequelize.STRING
     }
 })
 

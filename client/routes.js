@@ -4,6 +4,7 @@ import {withRouter, Route, Switch, Redirect} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import {Login, Signup, UserHome} from './components'
 import {me} from './store'
+import { fetchLogs } from './store/logs';
 
 /**
  * COMPONENT
@@ -48,8 +49,10 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    loadInitialData() {
-      dispatch(me())
+    async loadInitialData() {
+      await dispatch(me())
+      console.log('DISPATCHED ME, NOW GOING TO FETCH LOGS')
+      await dispatch(fetchLogs())
     }
   }
 }

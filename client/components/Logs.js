@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { removeLog } from '../store/logs'
+import { removeLog, fetchLogs } from '../store/logs'
 
 export class Logs extends Component {
     constructor (props) {
