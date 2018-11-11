@@ -49,6 +49,10 @@ export class SpeechConvertBox extends Component {
         speechRecognizer.continuous = true
         speechRecognizer.interimResults = true
         speechRecognizer.lang = 'en-IN'
+        speechRecognizer.onerror = function(event) {
+            console.log('Speech recognition error detected: ' + event.error);
+          }
+
         speechRecognizer.start()
 
         speechRecognizer.onresult = this.transcribe
@@ -59,23 +63,29 @@ export class SpeechConvertBox extends Component {
             finalTranscripts = ''
 
             if (this.state.speech.includes('like')) {
-                let toAdd = this.state.speech.split(' ').filter(word => word === 'like').length
-                console.log('adding: ', toAdd)
+                console.log('arr:', this.state.speech.split(' '))
+
+                let toAdd = this.state.speech.split(' ').filter(word => word === 'like' || word === '\nlike' || word === 'like\n').length
+                console.log(toAdd, 'will be logged')
+
+                console.log('adding to like count: ', toAdd)
                 likes = likes + toAdd
+
                 this.props.addLog({
                     phrase: this.state.speech,
                     likeCount: toAdd
                 })
+                
                 toAdd = 0
-                console.log(likes)
+                console.log('LIKES: ', likes)
             }
             
             this.setState({
                 speech: '',
             })
 
-            resetTimeout = setTimeout(() => this.startConverting(), 700)
-        }, 5000)
+            resetTimeout = setTimeout(() => this.startConverting(), 200)
+        }, 7000)
         timerInterval = setInterval(()=>this.timeCount(countDownDate), 100);
     }
 
@@ -101,13 +111,12 @@ export class SpeechConvertBox extends Component {
     }
 
     toggle() {
-        console.log(convertInterval)
         if (!convertInterval) {
             this.props.toggleTimer()
         } else {
             speechRecognizer.stop()
-            clearTimeout(convertInterval)
             clearTimeout(timerInterval)
+            clearTimeout(convertInterval)
             convertInterval = 0
             timerInterval = 0
             resetTimeout = 0
@@ -118,9 +127,7 @@ export class SpeechConvertBox extends Component {
     render() {
         const { hours, minutes, seconds } = this.state
         if(this.props.timer) {
-            // if (!countDownDate) {
             countDownDate = new Date()
-            // }
             this.props.toggleTimer()
             this.startConverting()
         }
@@ -146,11 +153,12 @@ export class SpeechConvertBox extends Component {
 }
 
 const mapStateToProps = state => ({
-    timer: state.timer
+    timer: state.timer,
+    logs: state.logs
 })
 
 const mapDispatchToProps = dispatch => ({
-    addLog: str => dispatch(addLog(str)),
+    addLog: obj => dispatch(addLog(obj)),
     toggleTimer: () => dispatch(toggleTimer())
 })
 

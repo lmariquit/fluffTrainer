@@ -19,12 +19,12 @@ class Routes extends Component {
     return (
       <Switch>
         {/* Routes placed here are available to all visitors */}
-        <Redirect exact from="/" to="/home" />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
-        <Route path="/home" component={UserHome} />
         {isLoggedIn && (
           <Switch>
+            <Redirect exact from="/" to="/home" />
+            <Route path="/home" component={UserHome} />
             {/* Routes placed here are only available after logging in */}
           </Switch>
         )}
