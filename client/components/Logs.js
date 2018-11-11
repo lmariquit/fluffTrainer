@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { removeLog, fetchLogs } from '../store/logs'
+import { removeLog } from '../store/logs'
 
 export class Logs extends Component {
     constructor (props) {
@@ -8,10 +8,11 @@ export class Logs extends Component {
     }
 
     render() {
+        console.log('the objarr: ',this.props.logs)
         return (
             <div id="logBox" className="ui floating message">
-                {this.props.logs.map(str => {
-                    return <div><i className="window close outline icon" onClick={() => this.props.removeLog(str)}></i>{str.phrase}</div>
+                {this.props.logs.map(obj => {
+                    return <div><i className="window close outline icon" onClick={() => this.props.removeLog(obj.id)}></i>{obj.phrase}</div>
                 })}
             </div>
         )
@@ -23,7 +24,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    removeLog: str => dispatch(removeLog(str))
+    removeLog: obj => dispatch(removeLog(obj))
 })
 
 export default connect (mapStateToProps, mapDispatchToProps)(Logs)

@@ -12,9 +12,9 @@ const addedLog = log => ({
     payload: log
 })
 
-const removedLog = log => ({
+const removedLog = id => ({
     type: REMOVE_LOG,
-    payload: log
+    payload: id
 })
 
 const getLogs = logs => ({
@@ -34,11 +34,14 @@ export const addLog = obj => async dispatch => {
     }
 }
 
-export const removeLog = str => async dispatch => {
+export const removeLog = id => async dispatch => {
     try {
-        await axios.delete('/', { phrase: str })
-        const action = removedLog(str)
-        dispatch(action)
+        console.log('obj', id)
+        console.log('the id', id)
+
+        const { data } = await axios.delete('/api/logs/remove/' + id)
+        console.log('thedtata:', data)
+        dispatch(removedLog(id))
     } catch(err) {
         console.log('REMOVE DIDNT WORK')
         console.error(err)
@@ -46,12 +49,9 @@ export const removeLog = str => async dispatch => {
 }
 
 export const fetchLogs = () => async dispatch => {
-    console.log(' WE MADE IT HERE')
     try { 
         const {data} = await axios.get('api/logs')
-        console.log('data: ', data)
         const action = getLogs(data)
-        console.log('the ation:', action)
         dispatch(action)
     } catch(err) {
         console.error(err)
@@ -62,12 +62,11 @@ export const fetchLogs = () => async dispatch => {
 export default function (prevState = [], action) {
     switch (action.type) {
         case GET_LOGS:
-        console.log(action.payload)
             return [...action.payload]
         case ADD_LOG:
             return [...prevState, action.payload]
         case REMOVE_LOG:
-            return prevState.filter(str => str !== action.payload)
+            return prevState.filter(obj => obj.id !== action.payload)
         default:
             return prevState
     }

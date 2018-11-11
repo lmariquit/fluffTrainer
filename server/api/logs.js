@@ -22,12 +22,14 @@ router.get('/', async (req, res, next) => {
 
 // api/logs
 router.post('/', async (req, res, next) => {
-    const { phrase, likeCount } = req.body
+    console.log('in add route')
+    const { phrase, likeCount, speechTime } = req.body
     try {
         const newLog = await Log.create({
             userId: req.user.id,
             phrase,
-            likeCount
+            likeCount,
+            speechTime
         })
         res.json(newLog)
     } catch(err) {
@@ -35,16 +37,20 @@ router.post('/', async (req, res, next) => {
     }
 })
 
-router.delete('/', async (req, res, next) => {
-    const { phrase } = req.body
+// api/logs
+router.delete('/remove/:id', async (req, res, next) => {
+    console.log('in the delete route. req.params:', req.params)
+    const id = req.params.id
+    console.log('id: ', id, 'userID', req.user.id)
     try {
-        await Log.destroy({
+        const deleted = await Log.destroy({
             where: {
                 userId: req.user.id,
-                phrase
+                id
             }
         })
-        res.sendStatus(204)
+        console.log('deleted', deleted)
+        res.status(204).json(deleted)
     } catch(err) {
         console.error(err)
     }

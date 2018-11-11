@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { addLog } from '../store/logs'
 import { toggleTimer } from '../store/timer'
 
+let speechTime = new Date().toString()
 let countDownDate
 let pause
 let convertInterval = 0
@@ -28,14 +29,6 @@ export class SpeechConvertBox extends Component {
         this.timeCount = this.timeCount.bind(this)
         this.toggle = this.toggle.bind(this)
     }
-
-    // componentDidMount () {
-    //     console.log('ooga chacka', this.props.logs)
-    //     this.props.logs.length && (likes = this.props.logs.reduce((acc, elem)=> {
-    //         return acc + elem.likeCount
-    //     }))
-    //     console.log(likes)
-    // }
 
     transcribe(event) {
         let interimTranscripts = '\n'
@@ -78,10 +71,11 @@ export class SpeechConvertBox extends Component {
 
                 console.log('adding to like count: ', toAdd)
                 likes = likes + toAdd
-
+                console.log('speech time:', speechTime)
                 this.props.addLog({
                     phrase: this.state.speech,
-                    likeCount: toAdd
+                    likeCount: toAdd,
+                    speechTime
                 })
                 
                 toAdd = 0
@@ -140,13 +134,11 @@ export class SpeechConvertBox extends Component {
             this.startConverting()
         }
 
-        console.log('ooga chacka', this.props.logs)
         this.props.logs.length && (
             likes = this.props.logs.reduce((acc, elem) => {
                 return acc + elem.likeCount
             }, 0)
         )
-        console.log(likes)
 
         return (
             <Fragment>
