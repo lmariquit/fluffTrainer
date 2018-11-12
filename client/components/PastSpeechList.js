@@ -7,16 +7,16 @@ const mapObj = {}
 class PastSpeechList extends Component {
     constructor(props) {
         super(props)
-        // this.boldLikes = this.boldLikes.bind(this)
+        this.boldLikes = this.boldLikes.bind(this)
     }
 
     componentDidMount() {
         this.props.fetchLogs()
     }
 
-    // boldLikes (phrase) {
-    //     return phrase.replace('like', '<b>like</b>')
-    // }
+    boldLikes (phrase) {
+        return phrase.replace(/like/g, 'LIKE').replace(/I mean/g, 'I MEAN').replace(/you know/g, 'YOU KNOW')
+    }
 
     render() {
         this.props.logs.length && this.props.logs.forEach(obj => {
@@ -39,7 +39,7 @@ class PastSpeechList extends Component {
             <Fragment>
                 <div id="titleRecordings">Your Past Recordings</div>
                 <div id="totalLikesContainer">
-                    <div id="totalLikes"> Total <b>"LIKE"</b> usage</div>
+                    <div id="totalLikes"> Total filler usage</div>
                     <div id="allLikesNumber">{totalLikes}</div>
                 </div>
                 <div>
@@ -50,7 +50,7 @@ class PastSpeechList extends Component {
                                     <div className="ui circular label" id="likeNumber">{arr[1].likeCount}</div>
                                     <div className="content">
                                         <div className="header">{arr[0]}</div>
-                                        {arr[1].phrases.map(phrase => <div><i className="angle right icon"></i>{phrase}</div>)}
+                                        {arr[1].phrases.map(phrase => <div><i className="angle right icon"></i>{this.boldLikes(phrase)}</div>)}
                                     </div>
                                 </div>
                             )
