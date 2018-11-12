@@ -5,6 +5,7 @@ import { toggleTimer } from '../store/timer'
 
 let speechTime = new Date().toString()
 let countDownDate
+let errorTimeout
 let pause
 let convertInterval = 0
 let timerInterval = 0
@@ -13,6 +14,7 @@ let likes = 0
 
 window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
 const speechRecognizer = new SpeechRecognition()
+
 let finalTranscripts = ''
 
 export class SpeechConvertBox extends Component {
@@ -58,13 +60,21 @@ export class SpeechConvertBox extends Component {
         speechRecognizer.onerror = function(event) {
             console.log('Speech recognition error detected: ' + event.error);
           }
-
-        speechRecognizer.start()
+        
+        try {
+            speechRecognizer.start()
+        } catch(err){
+            console.error('TRYING AGAIN:', err)
+            setTimeout(() => {
+                if (convertInterval !== 0) errorTimeout = speechRecognizer.start()
+            }, 700)
+        }
 
         speechRecognizer.onresult = this.transcribe
 
         convertInterval = setTimeout(() => {
-            console.log('resetting')
+            if (convertInterval !== 0) {
+                console.log('resetting')
             speechRecognizer.stop()
             finalTranscripts = ''
 
@@ -90,8 +100,11 @@ export class SpeechConvertBox extends Component {
             this.setState({
                 speech: '',
             })
-
-            resetTimeout = setTimeout(() => this.startConverting(), 200)
+            
+            resetTimeout = setTimeout(() => {
+                convertInterval !== 0 && this.startConverting()
+            }, 200)
+        }
         }, 7000)
         timerInterval = setInterval(()=>this.timeCount(countDownDate), 100);
     }
@@ -118,22 +131,31 @@ export class SpeechConvertBox extends Component {
     }
 
     toggle() {
+        console.log('convertInterval: ', convertInterval)
         if (!convertInterval) {
             this.props.toggleTimer()
         } else {
-            speechRecognizer.stop()
-            clearTimeout(timerInterval)
-            clearTimeout(convertInterval)
-            convertInterval = 0
-            timerInterval = 0
-            resetTimeout = 0
-            pause = new Date()
+            setTimeout(() => {
+                console.log('you have hit STOP')
+                this.props.toggleTimer()
+                speechRecognizer.stop()
+                clearTimeout(timerInterval)
+                clearTimeout(convertInterval)
+                clearTimeout(errorTimeout)
+                convertInterval = 0
+                timerInterval = 0
+                resetTimeout = 0
+                pause = new Date()
+                this.setState({
+                    speech: ''
+                })
+            }, 800)
         }
     }
-
+    
     render() {
         const { hours, minutes, seconds } = this.state
-        if(this.props.timer) {
+        if(this.props.timer && this.state.hours === '00' && this.state.minutes === '00' && this.state.seconds === '00') {
             countDownDate = new Date()
             this.props.toggleTimer()
             this.startConverting()
