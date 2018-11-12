@@ -210,7 +210,7 @@ export class SpeechConvertBox extends Component {
                     <button id="timeButton" className="ui green button" onClick={this.toggle}>START<i id="micIcon" className="microphone icon"></i></button>
                 </div>
                 <div id="sideBySide">
-                    <div id="likeLabel">Filler's Used: </div>
+                    <div id="likeLabel">Fluff Words Used: </div>
                     <div id="likesCount" className="ui red circular label">{likes}</div>
                 </div>
                 <div id="width" className="ui floating message">
