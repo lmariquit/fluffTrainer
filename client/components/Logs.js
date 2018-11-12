@@ -1,17 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { removeLog } from '../store/logs'
+import { removeLog, initializeLogs } from '../store/logs'
 
 export class Logs extends Component {
     constructor (props) {
         super(props)
     }
 
+    componentDidMount() {
+        this.props.initializeLogs()
+    }
+
     render() {
         return (
             <div id="logBox" className="ui floating message">
-                {this.props.logs.map(str => {
-                    return <div><i class="window close outline icon" onClick={() => this.props.removeLog(str)}></i>{str}</div>
+                {this.props.logs.map(obj => {
+                    return <div><i className="window close outline icon" onClick={() => this.props.removeLog(obj.id)}></i>{obj.phrase}</div>
                 })}
             </div>
         )
@@ -23,7 +27,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    removeLog: str => dispatch(removeLog(str))
+    removeLog: obj => dispatch(removeLog(obj)),
+    initializeLogs: () => dispatch(initializeLogs())
 })
 
 export default connect (mapStateToProps, mapDispatchToProps)(Logs)

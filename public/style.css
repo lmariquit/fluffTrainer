@@ -92,3 +92,46 @@ form div {
   padding-top: 30px;
   margin-right: 10px;
 }
+
+#listOfSessions {
+  display: flex;
+  flex-direction: row;
+  background: rgb(217, 227, 255);
+}
+
+#likeNumber {
+  margin: 20px;
+  font-size: 25px;
+  color: red;
+  background-color: rgb(219, 219, 219);
+}
+
+#titleRecordings {
+  font-size: 25px;
+  margin: 30px;
+  text-align: center;
+}
+
+#totalLikesContainer {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+#totalLikes {
+  font-size: 20px;
+  padding-top: 20px;
+  margin-right: 20px;
+}
+
+#allLikesNumber {
+  margin-right: 20px;
+  margin-bottom: 10px;
+  padding-top: 20px;
+  font-size: 30px;
+  color: red;
+  background-color: rgb(219, 219, 219);
+  border-radius: 50%;
+  height: 60px;
+  width: 60px;
+  text-align: center;
+}

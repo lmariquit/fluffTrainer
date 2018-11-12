@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
-import { addLog } from '../store/logs'
+import { addLog, initializeLogs } from '../store/logs'
 import { toggleTimer } from '../store/timer'
 
+let speechTime = new Date().toString()
 let countDownDate
 let pause
 let convertInterval = 0
@@ -29,6 +30,11 @@ export class SpeechConvertBox extends Component {
         this.toggle = this.toggle.bind(this)
     }
 
+    componentDidMount() {
+        this.props.initializeLogs()
+        likes = 0
+    }
+
     transcribe(event) {
         let interimTranscripts = '\n'
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -49,28 +55,44 @@ export class SpeechConvertBox extends Component {
         speechRecognizer.continuous = true
         speechRecognizer.interimResults = true
         speechRecognizer.lang = 'en-IN'
+        speechRecognizer.onerror = function(event) {
+            console.log('Speech recognition error detected: ' + event.error);
+          }
+
         speechRecognizer.start()
 
         speechRecognizer.onresult = this.transcribe
 
         convertInterval = setTimeout(() => {
             console.log('resetting')
-            finalTranscripts = ''
             speechRecognizer.stop()
+            finalTranscripts = ''
 
             if (this.state.speech.includes('like')) {
-                this.props.addLog(this.state.speech)
-                let toAdd = this.state.speech.split(' ').filter(word => word === 'like').length
-                likes = likes + toAdd
-                toAdd = 0
-            }
+                console.log('arr:', this.state.speech.split(' '))
 
+                let toAdd = this.state.speech.split(' ').filter(word => word === 'like' || word === '\nlike' || word === 'like\n').length
+                console.log(toAdd, 'will be logged')
+
+                console.log('adding to like count: ', toAdd)
+                likes = likes + toAdd
+                console.log('speech time:', speechTime)
+                this.props.addLog({
+                    phrase: this.state.speech,
+                    likeCount: toAdd,
+                    speechTime
+                })
+                
+                toAdd = 0
+                console.log('LIKES: ', likes)
+            }
+            
             this.setState({
                 speech: '',
             })
 
-            resetTimeout = setTimeout(() => this.startConverting(), 700)
-        }, 5000)
+            resetTimeout = setTimeout(() => this.startConverting(), 200)
+        }, 7000)
         timerInterval = setInterval(()=>this.timeCount(countDownDate), 100);
     }
 
@@ -95,19 +117,13 @@ export class SpeechConvertBox extends Component {
         })
     }
 
-    // startTimer() {
-    //     countDownDate = new Date()
-    //     setInterval(()=>this.timeCount(countDownDate), 100);
-    // }
-
     toggle() {
-        console.log(convertInterval)
         if (!convertInterval) {
             this.props.toggleTimer()
         } else {
             speechRecognizer.stop()
-            clearTimeout(convertInterval)
             clearTimeout(timerInterval)
+            clearTimeout(convertInterval)
             convertInterval = 0
             timerInterval = 0
             resetTimeout = 0
@@ -118,12 +134,16 @@ export class SpeechConvertBox extends Component {
     render() {
         const { hours, minutes, seconds } = this.state
         if(this.props.timer) {
-            // if (!countDownDate) {
             countDownDate = new Date()
-            // }
             this.props.toggleTimer()
             this.startConverting()
         }
+
+        this.props.logs.length && (
+            likes = this.props.logs.reduce((acc, elem) => {
+                return acc + elem.likeCount
+            }, 0)
+        )
 
         return (
             <Fragment>
@@ -132,7 +152,7 @@ export class SpeechConvertBox extends Component {
                     <button id="timeButton" className="ui green button" onClick={this.toggle}>START<i id="micIcon" className="microphone icon"></i></button>
                 </div>
                 <div id="sideBySide">
-                    <div id="likeLabel">"LIKES"</div>
+                    <div id="likeLabel">"LIKE"</div>
                     <div id="likesCount" className="ui red circular label">{likes}</div>
                 </div>
                 <div id="width" className="ui floating message">
@@ -146,12 +166,14 @@ export class SpeechConvertBox extends Component {
 }
 
 const mapStateToProps = state => ({
-    timer: state.timer
+    timer: state.timer,
+    logs: state.logs
 })
 
 const mapDispatchToProps = dispatch => ({
-    addLog: str => dispatch(addLog(str)),
-    toggleTimer: () => dispatch(toggleTimer())
+    addLog: obj => dispatch(addLog(obj)),
+    toggleTimer: () => dispatch(toggleTimer()),
+    initializeLogs: () => dispatch(initializeLogs())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SpeechConvertBox)
