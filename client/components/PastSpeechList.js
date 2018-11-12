@@ -7,7 +7,7 @@ const mapObj = {}
 class PastSpeechList extends Component {
     constructor(props) {
         super(props)
-        this.boldLikes = this.boldLikes.bind(this)
+        // this.boldLikes = this.boldLikes.bind(this)
     }
 
     componentDidMount() {
