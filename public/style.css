@@ -87,10 +87,17 @@ form div {
   margin-left: 10px;
 }
 
+#theeeeTitle {
+  font-size: 30px;
+  /* margin-bottom: 25px; */
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
 #likeLabel {
-  font-size: 40px;
+  font-size: 25px;
   padding-top: 30px;
   margin-right: 10px;
+  /* font-family: "Trebuchet MS", Helvetica, sans-serif; */
 }
 
 #listOfSessions {

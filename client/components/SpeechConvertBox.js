@@ -73,30 +73,52 @@ export class SpeechConvertBox extends Component {
         speechRecognizer.onresult = this.transcribe
 
         convertInterval = setTimeout(() => {
+            let toAdd = 0
+            let addDb = false
             if (convertInterval !== 0) {
-                console.log('resetting')
             speechRecognizer.stop()
             finalTranscripts = ''
 
             if (this.state.speech.includes('like')) {
-                console.log('arr:', this.state.speech.split(' '))
-
-                let toAdd = this.state.speech.split(' ').filter(word => word === 'like' || word === '\nlike' || word === 'like\n').length
-                console.log(toAdd, 'will be logged')
-
-                console.log('adding to like count: ', toAdd)
-                likes = likes + toAdd
-                console.log('speech time:', speechTime)
+                let toAddLike = this.state.speech.split(' ').filter(word => word === 'like' || word === '\nlike' || word === 'like\n').length
+                likes = likes + toAddLike
+                addDb = true
+                toAdd += toAddLike
+        }
+        
+        if (this.state.speech.includes('I mean')) {
+            let toAddIMean = 0
+            let target = this.state.speech
+            do {
+                toAddIMean += 1
+                target = target.slice(target.search('I mean')+7)
+            } while (target.search('I mean') >= 0)
+            likes = likes + toAddIMean
+            addDb = true
+            toAdd += toAddIMean
+        }
+        
+        if (this.state.speech.includes('you know')) {
+            let toAddYouKnow = 0
+            let target = this.state.speech
+            do {
+                toAddYouKnow += 1
+                target = target.slice(target.search('you know')+8)
+            } while (target.search('you know') >= 0)
+            likes = likes + toAddYouKnow
+            addDb = true
+            toAdd += toAddYouKnow
+        }
+        
+            if (addDb === true) {
                 this.props.addLog({
                     phrase: this.state.speech,
                     likeCount: toAdd,
                     speechTime
                 })
-                
                 toAdd = 0
-                console.log('LIKES: ', likes)
             }
-            
+
             this.setState({
                 speech: '',
             })
@@ -131,7 +153,6 @@ export class SpeechConvertBox extends Component {
     }
 
     toggle() {
-        console.log('convertInterval: ', convertInterval)
         if (!convertInterval) {
             this.props.toggleTimer()
         } else {
@@ -169,12 +190,20 @@ export class SpeechConvertBox extends Component {
 
         return (
             <Fragment>
+                {/* <div id="theeeeTitle">FillerKiller</div> */}
+                <h2 className="ui header">
+                    <i className="assistive listening systems icon"></i>
+                    <div className="content">
+                        FillerKiller
+                    </div>
+                </h2>
+
                 <div id="sideBySide">
                     <div id="time">{hours}:{minutes}:{seconds}</div>
                     <button id="timeButton" className="ui green button" onClick={this.toggle}>START<i id="micIcon" className="microphone icon"></i></button>
                 </div>
                 <div id="sideBySide">
-                    <div id="likeLabel">"LIKE"</div>
+                    <div id="likeLabel">Filler's Used: </div>
                     <div id="likesCount" className="ui red circular label">{likes}</div>
                 </div>
                 <div id="width" className="ui floating message">
