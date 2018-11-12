@@ -125,6 +125,9 @@ export class SpeechConvertBox extends Component {
             
             resetTimeout = setTimeout(() => {
                 convertInterval !== 0 && this.startConverting()
+                this.setState({
+                    speech: '',
+                })
             }, 200)
         }
         }, 7000)
@@ -158,14 +161,18 @@ export class SpeechConvertBox extends Component {
         } else {
             setTimeout(() => {
                 console.log('you have hit STOP')
+                this.setState({
+                    speech: ''
+                })
                 this.props.toggleTimer()
-                speechRecognizer.stop()
-                clearTimeout(timerInterval)
-                clearTimeout(convertInterval)
-                clearTimeout(errorTimeout)
                 convertInterval = 0
+                clearTimeout(convertInterval)
                 timerInterval = 0
+                clearTimeout(timerInterval)
                 resetTimeout = 0
+                clearTimeout(resetTimeout)
+                clearTimeout(errorTimeout)
+                speechRecognizer.stop()
                 pause = new Date()
                 this.setState({
                     speech: ''
