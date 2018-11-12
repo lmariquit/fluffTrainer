@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
-import { addLog } from '../store/logs'
+import { addLog, initializeLogs } from '../store/logs'
 import { toggleTimer } from '../store/timer'
 
 let speechTime = new Date().toString()
@@ -28,6 +28,11 @@ export class SpeechConvertBox extends Component {
         this.transcribe = this.transcribe.bind(this)
         this.timeCount = this.timeCount.bind(this)
         this.toggle = this.toggle.bind(this)
+    }
+
+    componentDidMount() {
+        this.props.initializeLogs()
+        likes = 0
     }
 
     transcribe(event) {
@@ -167,7 +172,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     addLog: obj => dispatch(addLog(obj)),
-    toggleTimer: () => dispatch(toggleTimer())
+    toggleTimer: () => dispatch(toggleTimer()),
+    initializeLogs: () => dispatch(initializeLogs())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SpeechConvertBox)

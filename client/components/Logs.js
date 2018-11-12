@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { removeLog } from '../store/logs'
+import { removeLog, initializeLogs } from '../store/logs'
 
 export class Logs extends Component {
     constructor (props) {
         super(props)
     }
 
+    componentDidMount() {
+        this.props.initializeLogs()
+    }
+
     render() {
-        console.log('the objarr: ',this.props.logs)
         return (
             <div id="logBox" className="ui floating message">
                 {this.props.logs.map(obj => {
@@ -24,7 +27,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    removeLog: obj => dispatch(removeLog(obj))
+    removeLog: obj => dispatch(removeLog(obj)),
+    initializeLogs: () => dispatch(initializeLogs())
 })
 
 export default connect (mapStateToProps, mapDispatchToProps)(Logs)

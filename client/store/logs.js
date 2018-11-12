@@ -1,9 +1,10 @@
 import axios from 'axios'
 
 //action types
+const INITIALIZE_LOGS = 'INITIALIZE_LOGS'
+const GET_LOGS = 'GET_LOGS'
 const ADD_LOG = 'ADD_LOG'
 const REMOVE_LOG = 'REMOVE_LOG'
-const GET_LOGS = 'GET_LOGS'
 
 
 //action creators
@@ -20,6 +21,10 @@ const removedLog = id => ({
 const getLogs = logs => ({
     type: GET_LOGS,
     payload: logs
+})
+
+export const initializeLogs = () => ({
+    type: INITIALIZE_LOGS
 })
 
 //thunk action creators
@@ -61,6 +66,8 @@ export const fetchLogs = () => async dispatch => {
 //reducer
 export default function (prevState = [], action) {
     switch (action.type) {
+        case INITIALIZE_LOGS:
+            return []
         case GET_LOGS:
             return [...action.payload]
         case ADD_LOG:

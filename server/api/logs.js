@@ -5,20 +5,17 @@ module.exports = router
 
 // api/logs
 router.get('/', async (req, res, next) => {
-    console.log('in here')
     try {
         const allLogs = await Log.findAll({
             where: {
                 userId: req.user.id
             }
         })
-        console.log('found: ', allLogs)
         res.json(allLogs)
     } catch(err) {
         console.error(err)
     }
 })
-
 
 // api/logs
 router.post('/', async (req, res, next) => {

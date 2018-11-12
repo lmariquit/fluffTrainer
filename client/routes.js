@@ -3,8 +3,10 @@ import {connect} from 'react-redux'
 import {withRouter, Route, Switch, Redirect} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import {Login, Signup, UserHome} from './components'
+import PastSpeechList from './components/PastSpeechList'
+import PastSpeechView from './components/PastSpeechView'
 import {me} from './store'
-import { fetchLogs } from './store/logs';
+import { initializeLogs } from './store/logs';
 
 /**
  * COMPONENT
@@ -26,6 +28,8 @@ class Routes extends Component {
           <Switch>
             <Redirect exact from="/" to="/home" />
             <Route path="/home" component={UserHome} />
+            <Route path="/past/:time" component={PastSpeechView} />
+            <Route path="/past" component={PastSpeechList} />
             {/* Routes placed here are only available after logging in */}
           </Switch>
         )}
@@ -52,7 +56,7 @@ const mapDispatch = dispatch => {
     async loadInitialData() {
       await dispatch(me())
       console.log('DISPATCHED ME, NOW GOING TO FETCH LOGS')
-      await dispatch(fetchLogs())
+      await dispatch(initializeLogs())
     }
   }
 }
