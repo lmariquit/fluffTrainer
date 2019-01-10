@@ -51,6 +51,9 @@ export class SpeechConvertBox extends Component {
         this.setState({
             speech: `${finalTranscripts + interimTranscripts}`
         })
+        interimTranscripts = ''
+        finalTranscripts = ''
+
     }
 
     startConverting() {
